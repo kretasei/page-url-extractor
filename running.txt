@@ -1,0 +1,8 @@
+Installing dependencies:
+pip install -r requirements.txt
+
+Extracting links:
+python extract_links.py main.html output.txt
+
+Downloading links:
+python download_links.py output.txt my_downloads --start-index 10
