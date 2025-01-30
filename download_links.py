@@ -23,11 +23,16 @@ def download_file(url, directory):
 def main():
     parser = argparse.ArgumentParser(description="Download files from a list of URLs.")
     parser.add_argument('input_file', type=str, help='Path to the input file containing URLs')
-    parser.add_argument('download_subdirectory', type=str, help='Subdirectory within the Downloads directory to save the files')
+    parser.add_argument('download_directory', type=str, help='Subdirectory within the Downloads directory to save the files or an absolute path')
     parser.add_argument('--start-index', type=int, default=0, help='Index to start downloading from')
+    parser.add_argument('--prompt', action='store_true', help='Enable prompt before downloading each file')
     args = parser.parse_args()
     
-    download_directory = os.path.join(os.path.expanduser('~/Downloads'), args.download_subdirectory)
+    if os.path.isabs(args.download_directory):
+        download_directory = args.download_directory
+    else:
+        download_directory = os.path.join(os.path.expanduser('~/Downloads'), args.download_directory)
+    
     os.makedirs(download_directory, exist_ok=True)
     
     with open(args.input_file, 'r') as file:
@@ -41,7 +46,8 @@ def main():
             print(f"Downloading {url}...")
             download_file(url, download_directory)
             print(f"Downloaded {url}")
-            input("Press Enter to download the next file...")
+            if args.prompt:
+                input("Press Enter to download the next file...")
 
 if __name__ == "__main__":
     main()
